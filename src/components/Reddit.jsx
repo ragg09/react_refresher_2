@@ -1,30 +1,34 @@
-import React, { useEffect, useState } from 'react'
+import React, {  } from 'react'
+import useFetch from '../hooks/useFetch'
 
 export default function Reddit() {
 
-    //data holder
-    const [posts, setPosts] = useState([]);
+    //you alias variable
+    const {data: posts, isLoading, errorMessage} = useFetch('https://www.reddit.com/r/aww.json');
 
-    //loading indicator
-    const [isLoading, setIsLoading] = useState(true);
+    // //data holder
+    // const [posts, setPosts] = useState([]);
 
-    //error handler
-    const [errorMessage, setErrorMessage] = useState(null);
+    // //loading indicator
+    // const [isLoading, setIsLoading] = useState(true);
 
-    //load onload
-    useEffect(()=>{
-        fetch('https://www.reddit.com/r/aww.json')
-        .then(response => response.json())
-        .then(results => {
-            console.log(results.data.children);
-            setPosts(results.data.children);
-            setIsLoading(false)
-        })
-        .catch(error => {
-            setIsLoading(false)
-            setErrorMessage('Error Encounter')
-        })
-    }, [])
+    // //error handler
+    // const [errorMessage, setErrorMessage] = useState(null);
+
+    // //load onload
+    // useEffect(()=>{
+    //     fetch('https://www.reddit.com/r/aww.json')
+    //     .then(response => response.json())
+    //     .then(results => {
+    //         console.log(results.data.children);
+    //         setPosts(results.data.children);
+    //         setIsLoading(false)
+    //     })
+    //     .catch(error => {
+    //         setIsLoading(false)
+    //         setErrorMessage('Error Encounter')
+    //     })
+    // }, [])
 
     return (
         <>
@@ -35,7 +39,7 @@ export default function Reddit() {
             <div className="mt-3">
                 {posts && (
                     <ul>
-                        {posts.map(post => (
+                        {posts.data.children.map(post => (
                             <li key={post.data.id}>
                                 <a href={`https://www.reddit.com${post.data.permalink}`} target="_blank"
                                 rel='noreferrer'

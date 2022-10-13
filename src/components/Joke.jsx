@@ -1,10 +1,33 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
+import { useQuery } from 'react-query';
 import useFetch from '../hooks/useFetch';
 
 export default function Joke() {
 
-     //you alias variable
-     const {data: jokes, isLoading, errorMessage} = useFetch('https://official-joke-api.appspot.com/jokes/random');
+
+    //react query | instead of calling every single time, data will be saved in cache for better response time
+    
+    const {
+        data: joke, 
+        isLoading, 
+        isError,
+        error,
+        isSuccess,
+    } = useQuery('joke', fetchJokes, {
+        staleTime: 5000,//staleTime is like a delay or how long cache will lasts
+        refetchOnWindowFocus : true, //boolean true default, refresh data depends on setting
+        retry: false,
+
+    });
+
+    function fetchJokes() {
+        return fetch('https://official-joke-api.appspot.com/jokes/random').then(response => response.json());
+    }
+
+
+
+    //  //you alias variable
+    //  const {data: jokes, isLoading, errorMessage} = useFetch('https://official-joke-api.appspot.com/jokes/random');
 
 
     // //data holder
@@ -40,10 +63,10 @@ export default function Joke() {
             {isLoading && <p>Loading . . .</p>}
 
             <div className="mt-3">
-                {jokes && <h1>{jokes.setup + " : " + jokes.punchline}</h1>}
+                {isSuccess && <h1>{joke.setup + " : " + joke.punchline}</h1>}
             </div>
 
-            {errorMessage && <div>{errorMessage}</div>}
+            {isError && <div>{error.message}</div>}
         
         </>
     )

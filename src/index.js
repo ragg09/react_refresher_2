@@ -5,14 +5,26 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.css';
 
+//react query
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools'
+
+
+const queryClient = new QueryClient();
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  //strict mode render twice in development to see if there is a potential error, 
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  
 
-  // <App />
+    //strict mode render twice in development to see if there is a potential error, 
+    <React.StrictMode>
+        <QueryClientProvider client={queryClient}>
+            <App />
+            <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+    </React.StrictMode>
+
+    // <App />
 );
 
 // If you want to start measuring performance in your app, pass a function

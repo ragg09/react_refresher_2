@@ -1,10 +1,33 @@
 import React, {  } from 'react'
+import { useQuery } from 'react-query'
 import useFetch from '../hooks/useFetch'
 
 export default function Reddit() {
 
-    //you alias variable
-    const {data: posts, isLoading, errorMessage} = useFetch('https://www.reddit.com/r/aww.json');
+     //react query | instead of calling every single time, data will be saved in cache for better response time
+     const {
+        data: posts, 
+        isLoading, 
+        isError,
+        error,
+        isSuccess,
+    } = useQuery('posts', fetchPosts,{
+        retry: false,
+    });
+
+    function fetchPosts() {
+        return fetch('https://wwxw.reddit.com/r/aww.json').then(response => response.json());
+    }
+
+
+
+    // //custom hook
+    // //you alias variable
+    // const {
+    //     data: posts, 
+    //     isLoading, 
+    //     errorMessage
+    // } = useFetch('https://www.reddit.com/r/aww.json');
 
     // //data holder
     // const [posts, setPosts] = useState([]);
@@ -37,7 +60,7 @@ export default function Reddit() {
             {isLoading && <p>Loading . . .</p>}
 
             <div className="mt-3">
-                {posts && (
+                {isSuccess && (
                     <ul>
                         {posts.data.children.map(post => (
                             <li key={post.data.id}>
@@ -50,7 +73,7 @@ export default function Reddit() {
                 )}
             </div>
 
-            {errorMessage && <div>{errorMessage}</div>}
+            {isError && <div>{error.message}</div>}
         
         </>
     )
